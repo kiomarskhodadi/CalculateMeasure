@@ -1,0 +1,9 @@
+
+spring:
+  profiles:
+    active: home
+  application:
+    name: assessment
+
+
+
