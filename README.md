@@ -1,33 +1,18 @@
-# Read Me First
+# Ad Analytics Processing System
 
-The following was discovered as part of building this project:
+A Java application for processing advertisement impression and click events to generate metrics and advertiser recommendations.
 
-* The JVM level was changed from '25' to '24', review
-  the [JDK Version Range](https://github.com/spring-projects/spring-framework/wiki/Spring-Framework-Versions#jdk-version-range)
-  on the wiki for more details.
+## Requirements
 
-# Getting Started
+- Java 17 or higher
+- Maven 3.6 or higher
 
-### Reference Documentation
+## Build Instructions
 
-For further reference, please consider the following sections:
+1. Clone the repository:
+```bash
+git clone <repository-url>
 
-* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
-* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/3.4.12/maven-plugin)
-* [Create an OCI image](https://docs.spring.io/spring-boot/3.4.12/maven-plugin/build-image.html)
-* [Spring Data JPA](https://docs.spring.io/spring-boot/3.4.12/reference/data/sql.html#data.sql.jpa-and-spring-data)
+mvn clean compile package
 
-### Guides
-
-The following guides illustrate how to use some features concretely:
-
-* [Accessing Data with JPA](https://spring.io/guides/gs/accessing-data-jpa/)
-
-### Maven Parent overrides
-
-Due to Maven's design, elements are inherited from the parent POM to the project POM.
-While most of the inheritance is fine, it also inherits unwanted elements like `<license>` and `<developers>` from the
-parent.
-To prevent this, the project POM contains empty overrides for these elements.
-If you manually switch to a different parent and actually want the inheritance, you need to remove those overrides.
-
+java -jar CalculateMeasure-0.0.1.jar <impressions_file> <clicks_file> <OutputPath\>
