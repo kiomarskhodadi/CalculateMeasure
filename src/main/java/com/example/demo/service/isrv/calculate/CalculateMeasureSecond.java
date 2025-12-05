@@ -3,7 +3,6 @@ package com.example.demo.service.isrv.calculate;
 import com.example.demo.service.dto.FactAppCountryTopNAdvertiser;
 import com.example.demo.service.dto.ImpressionDto;
 import com.example.demo.service.isrv.FileSrv;
-import com.example.demo.service.isrv.calculate.ACalculatorMeasure;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -11,11 +10,9 @@ import java.util.stream.Collectors;
 @Service
 public class CalculateMeasureSecond extends ACalculatorMeasure {
 
-    public CalculateMeasureSecond(FileSrv<FactAppCountryTopNAdvertiser> factTopNAdvertiserFileUtil) {
-        this.factFileUtil = factTopNAdvertiserFileUtil;
-    }
 
-    public Object calculateMeasure(Object data){
+
+    public HashMap<String,HashMap<Long, FactAppCountryTopNAdvertiser>> calculateMeasure(Object data){
         HashMap<String,HashMap<Long, FactAppCountryTopNAdvertiser>> retVal = new HashMap<>();
         HashMap<String,HashMap<Long,HashMap<Long,ArrayList<ImpressionDto>>>> impressions = (HashMap<String, HashMap<Long, HashMap<Long, ArrayList<ImpressionDto>>>>) data;
         HashMap<Long, FactAppCountryTopNAdvertiser> countryFact;
@@ -39,7 +36,7 @@ public class CalculateMeasureSecond extends ACalculatorMeasure {
         return retVal;
     }
 
-    public Object  createOutput(Object data){
+    public ArrayList<FactAppCountryTopNAdvertiser>  createOutput(Object data){
         HashMap<String,HashMap<Long, FactAppCountryTopNAdvertiser>> input = (HashMap<String, HashMap<Long, FactAppCountryTopNAdvertiser>>) data;
         return input.values().stream()
                 .flatMap(countryMap -> countryMap.values().stream())

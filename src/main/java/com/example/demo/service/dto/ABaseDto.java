@@ -15,4 +15,10 @@ public abstract class ABaseDto implements IBaseDto{
     public boolean validation() {
         return true;
     }
+
+    public String getId(){
+        return null;
+    }
+
+
 }

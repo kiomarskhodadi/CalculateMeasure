@@ -3,7 +3,6 @@ package com.example.demo.service.isrv.calculate;
 import com.example.demo.service.dto.FactAppCountry;
 import com.example.demo.service.dto.ImpressionDto;
 import com.example.demo.service.isrv.FileSrv;
-import com.example.demo.service.isrv.calculate.ACalculatorMeasure;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -15,10 +14,8 @@ import java.util.stream.Collectors;
 @Service
 public class CalculateMeasureFirst extends ACalculatorMeasure {
 
-    public CalculateMeasureFirst(FileSrv<FactAppCountry> factFileUtil) {
-        this.factFileUtil = factFileUtil;
-    }
-    public Object calculateMeasure(Object data){
+
+    public HashMap<String,HashMap<Long, FactAppCountry>> calculateMeasure(Object data){
         HashMap<String,HashMap<Long,HashMap<Long,ArrayList<ImpressionDto>>>> impressions = (HashMap<String, HashMap<Long, HashMap<Long, ArrayList<ImpressionDto>>>>) data;
         HashMap<String,HashMap<Long, FactAppCountry>> retVal = new HashMap<>();
         HashMap<Long, FactAppCountry> countryFact;

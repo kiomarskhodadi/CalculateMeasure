@@ -14,11 +14,10 @@ public abstract class ACalculatorMeasure implements ICalculateMeasure {
         return retVal;
     }
 
-    public boolean cal(Object data, String outputFilePath, String fileName){
+    public Object cal(Object data){
         Object measure = calculateMeasure(data);
         Object measureArr = createOutput(measure);
-        boolean retVal = writeFile(measureArr,outputFilePath,fileName);
-        return retVal;
+        return measureArr;
     }
 
 

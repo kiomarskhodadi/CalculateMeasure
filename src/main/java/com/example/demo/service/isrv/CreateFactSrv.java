@@ -1,39 +1,75 @@
 package com.example.demo.service.isrv;
 
 import com.example.demo.service.dto.ClickDto;
+import com.example.demo.service.dto.FactAppCountry;
+import com.example.demo.service.dto.FactAppCountryTopNAdvertiser;
 import com.example.demo.service.dto.ImpressionDto;
 import com.example.demo.service.implsrv.ICalculateMeasure;
+import com.example.demo.service.implsrv.ICreateFactPermanentSrv;
+import com.example.demo.service.implsrv.ICreateFactSrv;
+import com.example.demo.utility.GeneralUtility;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class CreateFact {
+public class CreateFactSrv implements ICreateFactSrv {
     public final FileSrv<ImpressionDto> impressionReader;
+
     public final FileSrv<ClickDto> clickReader;
+
+    public final FileSrv<FactAppCountry> factFirstFileUtil;
+
+    public final FileSrv<FactAppCountryTopNAdvertiser> factTopNAdvertiserFileUtil;
+
     public final ICalculateMeasure calculateMeasureFirst;
+
     public final ICalculateMeasure calculateMeasureSecond;
 
-    public CreateFact(FileSrv<ImpressionDto> impressionReader, FileSrv<ClickDto> clickReader, ICalculateMeasure calculateMeasureFirst, ICalculateMeasure calculateMeasureSecond) {
+    public final ICreateFactPermanentSrv createFactPermanentSrv;
+
+
+
+    public CreateFactSrv(FileSrv<ImpressionDto> impressionReader, FileSrv<ClickDto> clickReader, FileSrv<FactAppCountry> factFirstFileUtil, FileSrv<FactAppCountryTopNAdvertiser> factTopNAdvertiserFileUtil, ICalculateMeasure calculateMeasureFirst, ICalculateMeasure calculateMeasureSecond, ICreateFactPermanentSrv createFactPermanentSrv) {
         this.impressionReader = impressionReader;
         this.clickReader = clickReader;
+        this.factFirstFileUtil = factFirstFileUtil;
+        this.factTopNAdvertiserFileUtil = factTopNAdvertiserFileUtil;
         this.calculateMeasureFirst = calculateMeasureFirst;
         this.calculateMeasureSecond = calculateMeasureSecond;
-
+        this.createFactPermanentSrv = createFactPermanentSrv;
     }
-    public void transferDataToFact(String impressionFilePath,String clickFilePath,String outputFilePath)  {
+    public void transferDataToFact(String impressionFilePath,String clickFilePath,String outputFilePath,String useDataBase)  {
         try{
             List impression = impressionReader.readFile(impressionFilePath, ImpressionDto.class);
             List click = clickReader.readFile(clickFilePath, ClickDto.class);
+            impression = GeneralUtility.removeDuplicatesByField(impression);
+            if(useDataBase.equalsIgnoreCase("Y")){
+                calculateMeasureFileBaseAndDataBase(impression,click, outputFilePath);
+            }else{
+                calculateMeasureFileBaseAndCreateFile(impression,click, outputFilePath);
 
-            setClickToImpression(impression,click);
-            HashMap<String,HashMap<Long,HashMap<Long,ArrayList<ImpressionDto>>>> newStructureImpression = changeStructure(impression);
-            calculateMeasureFirst.cal(newStructureImpression,outputFilePath,"outputFirst.json");
-            calculateMeasureSecond.cal(newStructureImpression,outputFilePath,"outputSecond.json");
+            }
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    // TODO: Add delete Function
+    // TODO: Write Query For Calculate Measure First and TopN
+
+    public void calculateMeasureFileBaseAndDataBase(List impression,List click,String outputFilePath){
+        createFactPermanentSrv.saveImpression(impression);
+        createFactPermanentSrv.saveClicks(click);
+    }
+    public void calculateMeasureFileBaseAndCreateFile(List impression,List click,String outputFilePath){
+        setClickToImpression(impression,click);
+        HashMap<String,HashMap<Long,HashMap<Long,ArrayList<ImpressionDto>>>> newStructureImpression = changeStructure(impression);
+        Object factFirst = calculateMeasureFirst.cal(newStructureImpression);
+        Object factTopN = calculateMeasureSecond.cal(newStructureImpression);
+        factFirstFileUtil.writeFile((List) factFirst,outputFilePath,"outputFirst.json");
+        factTopNAdvertiserFileUtil.writeFile((List) factTopN,outputFilePath,"outputSecond.json");
     }
     public void setClickToImpression(List<ImpressionDto> impressions, List<ClickDto> clicks){
         impressions.stream().forEach(impression -> {
@@ -62,5 +98,6 @@ public class CreateFact {
         }
         return retVal;
     }
+
 
 }

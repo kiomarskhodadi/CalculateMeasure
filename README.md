@@ -15,4 +15,4 @@ git clone <repository-url>
 
 mvn clean compile package
 
-java -jar CalculateMeasure-0.0.1.jar <impressions_file> <clicks_file> <OutputPath\>
+java -jar CalculateMeasure-0.0.1.jar <impressions_file> <clicks_file> <OutputPath\> <Y For DataBase>
