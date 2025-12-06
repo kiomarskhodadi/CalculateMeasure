@@ -1,4 +1,4 @@
-package com.example.demo.service.implsrv;
+package com.example.demo.service.isrv;
 
 public interface ICalculateMeasure {
 

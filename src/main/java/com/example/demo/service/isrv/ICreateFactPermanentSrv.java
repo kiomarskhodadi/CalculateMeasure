@@ -1,4 +1,4 @@
-package com.example.demo.service.implsrv;
+package com.example.demo.service.isrv;
 
 import com.example.demo.service.dto.ClickDto;
 import com.example.demo.service.dto.FactAppCountry;

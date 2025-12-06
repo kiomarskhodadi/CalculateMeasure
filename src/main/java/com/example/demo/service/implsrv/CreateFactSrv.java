@@ -1,12 +1,12 @@
-package com.example.demo.service.isrv;
+package com.example.demo.service.implsrv;
 
 import com.example.demo.service.dto.ClickDto;
 import com.example.demo.service.dto.FactAppCountry;
 import com.example.demo.service.dto.FactAppCountryTopNAdvertiser;
 import com.example.demo.service.dto.ImpressionDto;
-import com.example.demo.service.implsrv.ICalculateMeasure;
-import com.example.demo.service.implsrv.ICreateFactPermanentSrv;
-import com.example.demo.service.implsrv.ICreateFactSrv;
+import com.example.demo.service.isrv.ICalculateMeasure;
+import com.example.demo.service.isrv.ICreateFactPermanentSrv;
+import com.example.demo.service.isrv.ICreateFactSrv;
 import com.example.demo.utility.GeneralUtility;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +45,7 @@ public class CreateFactSrv implements ICreateFactSrv {
             List impression = impressionReader.readFile(impressionFilePath, ImpressionDto.class);
             List click = clickReader.readFile(clickFilePath, ClickDto.class);
             impression = GeneralUtility.removeDuplicatesByField(impression);
-            if(useDataBase.equalsIgnoreCase("Y")){
+            if(Objects.nonNull(useDataBase) && useDataBase.equalsIgnoreCase("Y")){
                 calculateMeasureFileBaseAndDataBase(impression,click, outputFilePath);
             }else{
                 calculateMeasureFileBaseAndCreateFile(impression,click, outputFilePath);

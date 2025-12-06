@@ -1,11 +1,9 @@
-package com.example.demo.service.isrv;
+package com.example.demo.service.implsrv;
 
-import com.example.demo.dao.entity.Click;
-import com.example.demo.dao.entity.Impression;
 import com.example.demo.dao.repo.IClickRepo;
 import com.example.demo.dao.repo.IImpressionRepo;
 import com.example.demo.service.dto.*;
-import com.example.demo.service.implsrv.ICreateFactPermanentSrv;
+import com.example.demo.service.isrv.ICreateFactPermanentSrv;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Async;

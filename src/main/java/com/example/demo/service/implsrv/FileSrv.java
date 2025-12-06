@@ -1,4 +1,4 @@
-package com.example.demo.service.isrv;
+package com.example.demo.service.implsrv;
 
 import com.example.demo.service.dto.IBaseDto;
 import com.fasterxml.jackson.databind.ObjectMapper;

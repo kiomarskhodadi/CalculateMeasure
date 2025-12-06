@@ -1,7 +1,7 @@
-package com.example.demo.service.isrv.calculate;
+package com.example.demo.service.implsrv.calculate;
 
-import com.example.demo.service.implsrv.ICalculateMeasure;
-import com.example.demo.service.isrv.FileSrv;
+import com.example.demo.service.isrv.ICalculateMeasure;
+import com.example.demo.service.implsrv.FileSrv;
 
 import java.util.*;
 
