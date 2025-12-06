@@ -4,8 +4,7 @@ import com.example.demo.dao.entity.Click;
 import com.example.demo.dao.entity.Impression;
 import com.example.demo.dao.repo.IClickRepo;
 import com.example.demo.dao.repo.IImpressionRepo;
-import com.example.demo.service.dto.ClickDto;
-import com.example.demo.service.dto.ImpressionDto;
+import com.example.demo.service.dto.*;
 import com.example.demo.service.implsrv.ICreateFactPermanentSrv;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -14,9 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -113,6 +110,69 @@ public class CreateFactPermanentSrv implements ICreateFactPermanentSrv {
             retVal = CompletableFuture.completedFuture(false);
             log.error("Error in save Data",e);
         }
+        return retVal;
+    }
+
+    public List<FactAppCountry> createFactFirst(){
+        List<FactAppCountry> click = loadListOfAggClick();
+        List<FactAppCountry> impression = loadListOfAggImpression();
+        impression.stream().forEach( imp -> {
+            click.stream().
+                    filter(clk -> clk.getApp_id().equals(imp.getApp_id()) && clk.getCountry_code().equals(imp.getCountry_code())).
+                    findFirst().
+                    ifPresent(fclk -> {
+                        imp.setCntClicks(fclk.getCntClicks());
+                        imp.setSumRevenue(fclk.getSumRevenue());
+                    });
+        });
+        return impression;
+    }
+
+    // TODO: Multi Thread
+    public List<FactAppCountry> loadListOfAggClick(){
+        List<FactAppCountry> retVal = clickRepo.cntClkAppCountry();
+        return retVal;
+    }
+    public List<FactAppCountry> loadListOfAggImpression(){
+        List<FactAppCountry> retVal = impressionRepo.cntImpressionAppCountry();
+        return retVal;
+    }
+
+    public List<FactAppCountryTopNAdvertiser> createFactTopN(int topN){
+
+        List<FactAppCountryTopNAdvertiser> retVal ;
+        HashMap<String,FactAppCountryTopNAdvertiser> factApp;
+        FactAppCountryTopNAdvertiser factAppCountry;
+        List<FactAppCountryAdvertiser> factAppCountryAdvertisers = loadListOfTopN(topN);
+        HashMap<Long,HashMap<String,FactAppCountryTopNAdvertiser>> restructure = new HashMap<>();
+        for(FactAppCountryAdvertiser f:factAppCountryAdvertisers){
+            factApp = restructure.get(f.getApp_id());
+            factApp = Objects.isNull(factApp) ? new HashMap<>():factApp;
+            factAppCountry = factApp.get(f.getCountry_code());
+            factAppCountry = Objects.isNull(factAppCountry) ? new FactAppCountryTopNAdvertiser():factAppCountry;
+            factAppCountry.setApp_id(f.getApp_id());
+            factAppCountry.setCountry_code(f.getCountry_code());
+            factAppCountry.getTopNAdvertiserId().add(f.getTopNAdvertiserId());
+            factApp.put(f.getCountry_code(),factAppCountry);
+            restructure.put(f.getApp_id(),factApp);
+        }
+        retVal = restructure.values().stream()
+                    .flatMap(countryMap -> countryMap.values().stream())
+                    .collect(Collectors.toCollection(ArrayList::new));
+        return retVal;
+    }
+    // TODO: Multi Thread
+    public List<FactAppCountryAdvertiser> loadListOfTopN(int topN){
+        List<FactAppCountryAdvertiser> retVal ;
+        List<Object[]> results = impressionRepo.TopNImpressionAppCountryAdvertiser(topN);
+
+        retVal =  results.stream()
+                .map(row -> new FactAppCountryAdvertiser(
+                        ((Number) row[0]).longValue(),
+                        (String) row[1],
+                        ((Number) row[2]).longValue()
+                ))
+                .collect(Collectors.toList());
         return retVal;
     }
 

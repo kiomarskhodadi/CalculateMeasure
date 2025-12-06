@@ -18,6 +18,20 @@ public class FactAppCountry extends ABaseDto  {
     private Integer cntClicks;
     private double sumRevenue;
 
+
+    public FactAppCountry( Long app_id, String country_code, Integer cntImpressions) {
+        this.app_id = app_id;
+        this.country_code = country_code;
+        this.cntImpressions = cntImpressions;
+    }
+
+    public FactAppCountry(Long app_id, String country_code, Integer cntClicks, double sumRevenue) {
+        this.app_id = app_id;
+        this.country_code = country_code;
+        this.cntClicks = cntClicks;
+        this.sumRevenue = sumRevenue;
+    }
+
     public FactAppCountry(Long app_id, String country_code, Integer cntImpressions, Integer cntClicks, double sumRevenue) {
         this(new Timestamp(System.currentTimeMillis()),app_id,country_code,cntImpressions,cntClicks,sumRevenue);
     }

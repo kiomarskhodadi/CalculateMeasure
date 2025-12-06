@@ -49,7 +49,6 @@ public class CreateFactSrv implements ICreateFactSrv {
                 calculateMeasureFileBaseAndDataBase(impression,click, outputFilePath);
             }else{
                 calculateMeasureFileBaseAndCreateFile(impression,click, outputFilePath);
-
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -57,11 +56,13 @@ public class CreateFactSrv implements ICreateFactSrv {
     }
 
     // TODO: Add delete Function
-    // TODO: Write Query For Calculate Measure First and TopN
-
     public void calculateMeasureFileBaseAndDataBase(List impression,List click,String outputFilePath){
         createFactPermanentSrv.saveImpression(impression);
         createFactPermanentSrv.saveClicks(click);
+        Object factFirst = createFactPermanentSrv.createFactFirst();
+        Object factTopN = createFactPermanentSrv.createFactTopN(5);
+        factFirstFileUtil.writeFile((List) factFirst,outputFilePath,"outputFirst.json");
+        factTopNAdvertiserFileUtil.writeFile((List) factTopN,outputFilePath,"outputSecond.json");
     }
     public void calculateMeasureFileBaseAndCreateFile(List impression,List click,String outputFilePath){
         setClickToImpression(impression,click);

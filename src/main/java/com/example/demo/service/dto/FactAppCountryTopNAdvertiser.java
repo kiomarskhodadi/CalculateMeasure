@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -25,5 +26,12 @@ public class FactAppCountryTopNAdvertiser extends ABaseDto {
         this.app_id = app_id;
         this.country_code = country_code;
         this.topNAdvertiserId = topNAdvertiserId;
+    }
+
+    public ArrayList<Long> getTopNAdvertiserId() {
+        if(Objects.isNull(topNAdvertiserId)){
+            topNAdvertiserId = new ArrayList<>();
+        }
+        return topNAdvertiserId;
     }
 }

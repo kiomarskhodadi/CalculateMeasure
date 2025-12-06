@@ -1,6 +1,7 @@
 package com.example.demo.service.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,12 +19,17 @@ import java.util.Objects;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ImpressionDto extends ABaseDto implements Comparable<ImpressionDto>{
 
+
     private String id;
     private Long app_id;
     private Long advertiser_id;
     private String country_code;
     private ArrayList<ClickDto> clicks;
     private double sumRevenue;
+    @JsonValue
+    public String getId() {
+        return id;
+    }
 
     @Override
     public boolean validation() {
